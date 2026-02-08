@@ -6,23 +6,23 @@ Google Cloud Platform provides GPU and TPU infrastructure for ML workloads throu
 
 ```
 GCP ML Compute Options:
-┌─────────────────────────────────────────────────────────┐
-│                     Vertex AI                            │
-│  (Managed ML platform — training, serving, pipelines)   │
-│  ┌─────────────────┐  ┌─────────────────────────────┐  │
-│  │ Custom Training  │  │ AutoML / Model Garden        │  │
-│  │ (your code)      │  │ (pre-built models)           │  │
-│  └─────────────────┘  └─────────────────────────────┘  │
-├─────────────────────────────────────────────────────────┤
-│                                                          │
-│  ┌─────────────┐  ┌──────────────┐  ┌───────────────┐  │
-│  │   GKE       │  │  Compute     │  │  Cloud TPU    │  │
-│  │  (K8s +     │  │  Engine      │  │  (Managed     │  │
-│  │   GPUs)     │  │  (GPU VMs)   │  │   TPU VMs)    │  │
-│  └─────────────┘  └──────────────┘  └───────────────┘  │
-│                                                          │
-│                 Infrastructure Layer                     │
-└─────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────────┐
+│                          Vertex AI                                │
+│  (Managed ML platform — training, serving, notebooks, tuning)    │
+│  ┌───────────────┐ ┌───────────────┐ ┌────────────────────────┐ │
+│  │Custom Training │ │ AutoML /      │ │ Workbench /            │ │
+│  │(your code)     │ │ Model Garden  │ │ Colab Enterprise       │ │
+│  └───────────────┘ └───────────────┘ └────────────────────────┘ │
+├──────────────────────────────────────────────────────────────────┤
+│                                                                   │
+│  ┌─────────────┐  ┌──────────────┐  ┌─────────────────────────┐ │
+│  │   GKE       │  │  Compute     │  │  Cloud TPU              │ │
+│  │  (K8s +     │  │  Engine      │  │  (TPU VMs /             │ │
+│  │   GPUs)     │  │  (DL VMs)    │  │   Queued Resources)     │ │
+│  └─────────────┘  └──────────────┘  └─────────────────────────┘ │
+│                                                                   │
+│            Infrastructure Layer / AI Hypercomputer                │
+└──────────────────────────────────────────────────────────────────┘
 ```
 
 ## GCP GPU Options
@@ -37,6 +37,8 @@ GCP ML Compute Options:
 | NVIDIA A100 (40GB) | 40 GB | Large-scale training | `a2-highgpu-*` |
 | NVIDIA A100 (80GB) | 80 GB | Large model training | `a2-ultragpu-*` |
 | NVIDIA H100 (80GB) | 80 GB | LLM training | `a3-highgpu-*` |
+| NVIDIA H200 (141GB) | 141 GB | LLM training, large context | `a3-ultragpu-*` |
+| NVIDIA B200 (192GB) | 192 GB | Next-gen LLM training | `a4-highgpu-*` (Blackwell) |
 
 ### Creating a GPU VM
 
@@ -77,6 +79,57 @@ gcloud compute regions describe us-central1 \
 - Start small (4-8 GPUs), then increase after initial approval
 - Preemptible/spot quotas are separate and often easier to get
 - A100 and H100 quotas are limited; apply early
+
+### Deep Learning VMs and Containers
+
+GCP provides pre-configured VM images and Docker containers with ML frameworks, CUDA drivers, and GPU support already installed. These save significant setup time compared to building from scratch.
+
+**Deep Learning VM (DLVM) image families:**
+
+| Image Family | Framework | CUDA |
+|-------------|-----------|------|
+| `pytorch-latest-gpu` | Latest PyTorch | Latest supported |
+| `tf-latest-gpu` | Latest TensorFlow | Latest supported |
+| `common-cu121` | No framework (CUDA only) | 12.1 |
+
+```bash
+# List available DLVM image families
+gcloud compute images list --project=deeplearning-platform-release \
+    --no-standard-images --format="table(name,family)" \
+    | grep pytorch
+
+# Create a DLVM with PyTorch and A100
+gcloud compute instances create dlvm-pytorch \
+    --zone=us-central1-a \
+    --machine-type=a2-highgpu-1g \
+    --accelerator=type=nvidia-tesla-a100,count=1 \
+    --image-family=pytorch-latest-gpu \
+    --image-project=deeplearning-platform-release \
+    --boot-disk-size=200GB \
+    --maintenance-policy=TERMINATE \
+    --metadata="install-nvidia-driver=True,proxy-mode=project_editors"
+```
+
+**Deep Learning Containers** are Docker images for GKE and Vertex AI:
+
+```bash
+# List available Deep Learning Containers
+gcloud container images list \
+    --repository="us-docker.pkg.dev/deeplearning-platform-release/gcr.io" \
+    | grep pytorch-gpu
+
+# Use in a GKE pod or Vertex AI training job
+# Container URI format:
+# us-docker.pkg.dev/deeplearning-platform-release/gcr.io/pytorch-gpu.2-1:latest
+```
+
+**When to use which:**
+
+| Option | Use Case |
+|--------|----------|
+| DLVM | Interactive development, SSH-based workflows, full VM control |
+| DL Container | GKE workloads, Vertex AI training jobs, reproducible environments |
+| Custom image | Specific version pinning, proprietary dependencies |
 
 ## Cloud TPU
 
@@ -176,6 +229,76 @@ def train_fn(index, flags):
 # Launch on all TPU cores
 xmp.spawn(train_fn, args=(flags,))
 ```
+
+### TPU Queued Resources
+
+TPU capacity is limited. Queued Resources let you request a TPU and wait in a queue until capacity is available, rather than failing immediately when none is free.
+
+```
+Queued Resource States:
+WAITING_FOR_RESOURCES ──▶ PROVISIONING ──▶ ACTIVE
+        │                       │
+        ▼                       ▼
+   SUSPENDED                  FAILED
+```
+
+```bash
+# Create a queued resource request
+gcloud compute tpus queued-resources create my-queued-tpu \
+    --zone=us-central2-b \
+    --accelerator-type=v4-8 \
+    --runtime-version=tpu-vm-tf-2.14.0 \
+    --node-id=my-tpu-node
+
+# Check status (look for "state" field)
+gcloud compute tpus queued-resources describe my-queued-tpu \
+    --zone=us-central2-b
+
+# List all queued resources
+gcloud compute tpus queued-resources list --zone=us-central2-b
+
+# Delete when done (important — queued resources consume quota even while waiting)
+gcloud compute tpus queued-resources delete my-queued-tpu \
+    --zone=us-central2-b
+```
+
+**Key points:**
+- Queued resources consume quota while in any state — always delete unused requests
+- You can specify `--best-effort` for lower-priority requests that may be preempted
+- Use `--valid-after-time` and `--valid-until-time` to set scheduling windows
+
+### Multislice TPU Training
+
+For workloads that exceed a single TPU slice, multislice training distributes across multiple slices connected via the data center network (DCN).
+
+```
+Multislice TPU Training:
+┌──────────────────┐     DCN        ┌──────────────────┐
+│   TPU Slice 0    │ ◄────────────▶ │   TPU Slice 1    │
+│  v4-16 (8 chips) │  (inter-slice) │  v4-16 (8 chips) │
+│  ICI (fast)      │                │  ICI (fast)       │
+└──────────────────┘                └──────────────────┘
+
+ICI  = Inter-Chip Interconnect (within a slice) — very high bandwidth
+DCN  = Data Center Network (between slices) — lower bandwidth
+```
+
+```bash
+# Create a multislice TPU environment (2 slices of v4-16)
+gcloud compute tpus queued-resources create multislice-job \
+    --zone=us-central2-b \
+    --accelerator-type=v4-16 \
+    --runtime-version=tpu-vm-tf-2.14.0 \
+    --node-count=2 \
+    --node-prefix=slice
+```
+
+**When to use multislice:**
+- Model or batch size exceeds single-slice memory
+- Need more aggregate compute throughput
+- Already using a full pod slice and need to scale further
+
+**Key consideration:** Minimize inter-slice communication. Use data parallelism across slices (lower bandwidth requirement) and tensor parallelism within a slice (high ICI bandwidth).
 
 ## Vertex AI
 
@@ -450,7 +573,10 @@ gcloud billing budgets create \
 
 1. **Choose the right abstraction level:** Vertex AI for managed training, GKE for containerized workloads, Compute Engine for full control.
 2. **GPU quotas** are the most common blocker — request quota increases early and for specific zones.
-3. **TPU VMs** (not TPU Nodes) are the current recommended way to use Cloud TPU.
-4. **Spot/preemptible VMs** save 60-91% on GPU costs — make your training preemption-safe with frequent checkpointing.
-5. **GKE GPU node pools** with autoscaling let you scale GPU resources up and down with demand.
-6. **Always test locally first** (or on a small VM) before submitting large training jobs to avoid expensive failures.
+3. **Deep Learning VMs and Containers** are the fastest way to start — pre-installed frameworks, drivers, and CUDA save hours of setup.
+4. **TPU VMs** (not TPU Nodes) are the current recommended way to use Cloud TPU. Use **Queued Resources** for guaranteed access in capacity-constrained regions.
+5. **Multislice TPU training** scales beyond a single pod slice — use data parallelism across slices and tensor parallelism within slices.
+6. **Spot/preemptible VMs** save 60-91% on GPU costs — make your training preemption-safe with frequent checkpointing.
+7. **GKE GPU node pools** with autoscaling let you scale GPU resources up and down with demand.
+8. **Always test locally first** (or on a small VM) before submitting large training jobs to avoid expensive failures.
+9. **See Chapter 10** for the Vertex AI managed services ecosystem: Workbench notebooks, TensorBoard, model serving, hyperparameter tuning, and AI Hypercomputer.

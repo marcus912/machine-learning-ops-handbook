@@ -12,7 +12,8 @@ What's happening?
 │   ├── CUDA OOM → Chapter 4, Chapter 8
 │   ├── CUDA runtime error → Chapter 4 (set CUDA_LAUNCH_BLOCKING=1)
 │   ├── Import error / driver mismatch → Check driver/CUDA/PyTorch compatibility
-│   └── XLA compilation error → Chapter 3 (check shapes)
+│   ├── XLA compilation error → Chapter 3 (check shapes)
+│   └── Vertex AI job stuck/failing → Check quota, container, permissions (Ch 7, 10)
 │
 ├── Training crashes after some time
 │   ├── OOM (memory leak) → Profile memory over time
@@ -426,9 +427,10 @@ If you're starting from zero with GPU/TPU debugging, here's a structured approac
 - Identify and fix your main bottleneck
 - Try FSDP for a model that doesn't fit in DDP
 
-### Phase 4: Optimization (Chapters 7-8)
-**Goal:** Optimize memory and cost.
+### Phase 4: Optimization & GCP Platform (Chapters 7-8, 10)
+**Goal:** Optimize memory and cost, use managed services.
 - Set up a GCP training job (Chapter 7)
+- Explore Vertex AI Workbench, TensorBoard, and model serving (Chapter 10)
 - Apply mixed precision, gradient checkpointing, and DeepSpeed (Chapter 8)
 - Measure the memory savings from each technique
 - Try QLoRA fine-tuning of a 7B model on a single GPU

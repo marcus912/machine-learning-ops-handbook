@@ -12,9 +12,10 @@ A beginner-friendly guide to understanding, debugging, and optimizing GPU and TP
 | [04](04-common-errors.md) | Common Errors & Fixes | OOM errors, CUDA errors, XLA failures, distributed training errors with solutions |
 | [05](05-distributed-training.md) | Distributed Training | Data/model/pipeline parallelism, DDP, FSDP, multi-GPU and multi-node training |
 | [06](06-profiling-tools.md) | Profiling Tools | PyTorch Profiler, TensorBoard, NVIDIA Nsight Systems, and performance analysis |
-| [07](07-gcp-gpu-tpu.md) | GCP GPU/TPU Infrastructure | Vertex AI, GKE with GPUs, Cloud TPU, and Google Cloud ML infrastructure |
+| [07](07-gcp-gpu-tpu.md) | GCP GPU/TPU Infrastructure | Compute Engine GPU VMs, Cloud TPU, GKE with GPUs, Deep Learning VMs, and multislice training |
 | [08](08-memory-optimization.md) | Memory Optimization | Gradient checkpointing, mixed precision, DeepSpeed ZeRO, and memory-efficient training |
 | [09](09-best-practices.md) | Best Practices | Debugging workflows, framework-specific tips, and a structured learning path |
+| [10](10-gcp-vertex-ai-ecosystem.md) | GCP Vertex AI Ecosystem | Vertex AI Workbench, Colab Enterprise, TensorBoard, model serving, HP tuning, and AI Hypercomputer |
 
 ## Recommended Reading Order
 
@@ -31,11 +32,12 @@ A beginner-friendly guide to understanding, debugging, and optimizing GPU and TP
 4. Fill in remaining chapters as needed
 
 **If you're preparing for a Google interview:**
-1. Focus on Chapters 03, 04, 05, 07 (TPU knowledge, errors, distributed, GCP)
-2. Review Chapter 08 for optimization strategies
-3. Use Chapter 09 as a checklist
+1. Focus on Chapters 03, 04, 05, 07 (TPU knowledge, errors, distributed, GCP infra)
+2. Read Chapter 10 for Vertex AI ecosystem and managed ML services
+3. Review Chapter 08 for optimization strategies
+4. Use Chapter 09 as a checklist
 
-## 10-Week Learning Path
+## 11-Week Learning Path
 
 This learning path assumes ~5 hours per week of study and hands-on practice.
 
@@ -48,9 +50,10 @@ This learning path assumes ~5 hours per week of study and hands-on practice.
 | 5 | Error Resolution | Ch 04 (second half) | Practice debugging XLA and distributed errors |
 | 6 | Distributed Training | Ch 05 | Run DDP training on multi-GPU setup |
 | 7 | Profiling | Ch 06 | Profile a real training loop, find bottlenecks |
-| 8 | GCP Infrastructure | Ch 07 | Set up Vertex AI training job, use Cloud TPU |
-| 9 | Memory Optimization | Ch 08 | Implement mixed precision, gradient checkpointing |
-| 10 | Review & Practice | Ch 09 + All | End-to-end debugging exercise, review best practices |
+| 8 | GCP Infrastructure | Ch 07 | Set up GPU VM, Cloud TPU, GKE GPU node pool |
+| 9 | Vertex AI Ecosystem | Ch 10 | Explore Workbench notebooks, set up TensorBoard, deploy endpoint |
+| 10 | Memory Optimization | Ch 08 | Implement mixed precision, gradient checkpointing |
+| 11 | Review & Practice | Ch 09 + All | End-to-end debugging exercise, review best practices |
 
 ## Prerequisites
 
