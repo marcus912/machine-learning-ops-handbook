@@ -440,10 +440,13 @@ args = parser.parse_args()
 
 # Use args.learning_rate, args.batch_size, args.dropout in training
 
-# Report metric back to Vertex AI
-from google.cloud import aiplatform
-aiplatform.init()
-aiplatform.log_metrics({"val_accuracy": final_accuracy})
+# Report metric back to Vertex AI HP tuning service
+import hypertune
+hpt = hypertune.HyperTune()
+hpt.report_hyperparameter_tuning_metric(
+    hyperparameter_metric_tag='val_accuracy',
+    metric_value=final_accuracy,
+    global_step=epoch)
 ```
 
 ### Debugging Tuning Jobs

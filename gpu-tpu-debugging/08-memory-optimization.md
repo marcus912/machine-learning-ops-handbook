@@ -393,7 +393,7 @@ lora_config = LoraConfig(
 
 model = get_peft_model(model, lora_config)
 model.print_trainable_parameters()
-# trainable params: 4,194,304 || all params: 3,740,000,000 || trainable%: 0.112%
+# trainable params: 4,194,304 || all params: 6,738,415,616 || trainable%: 0.062%
 ```
 
 ## Memory Optimization Decision Tree

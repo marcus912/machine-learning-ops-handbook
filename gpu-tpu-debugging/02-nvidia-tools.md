@@ -216,9 +216,6 @@ export NCCL_P2P_DISABLE=1     # Disable peer-to-peer (NVLink), fall back to shar
 export NCCL_SHM_DISABLE=1     # Disable shared memory transport
 export NCCL_IB_DISABLE=1      # Disable InfiniBand (for multi-node)
 
-# Set NCCL timeout (seconds)
-export NCCL_TIMEOUT=1800      # Default varies; increase for large models
-
 # Network interface selection (multi-node)
 export NCCL_SOCKET_IFNAME=eth0  # Specify which network interface to use
 ```
@@ -368,7 +365,6 @@ nvcc -g -G -o output kernel.cu
 | `NCCL_P2P_DISABLE` | `0` or `1` | Disable NVLink peer-to-peer |
 | `NCCL_IB_DISABLE` | `0` or `1` | Disable InfiniBand |
 | `NCCL_SOCKET_IFNAME` | `eth0`, `ens3`, etc. | Select network interface for NCCL |
-| `NCCL_TIMEOUT` | seconds | Timeout for NCCL collective operations |
 | `PYTORCH_CUDA_ALLOC_CONF` | see below | Configure PyTorch CUDA memory allocator |
 
 ### PYTORCH_CUDA_ALLOC_CONF Options

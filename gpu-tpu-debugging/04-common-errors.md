@@ -429,7 +429,7 @@ log_probs = torch.log_softmax(logits, dim=-1)  # Numerically stable
 
 # Cause: Mixed precision overflow (FP16)
 # BAD:
-scaler = torch.cuda.amp.GradScaler()  # With default settings
+scaler = torch.amp.GradScaler()  # With default settings
 # GOOD: Check if loss scale is going to zero
 # If loss scale keeps decreasing, there may be genuine numerical issues
 ```
