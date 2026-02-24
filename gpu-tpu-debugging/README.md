@@ -16,6 +16,15 @@ A beginner-friendly guide to understanding, debugging, and optimizing GPU and TP
 | [08](08-memory-optimization.md) | Memory Optimization | Gradient checkpointing, mixed precision, DeepSpeed ZeRO, and memory-efficient training |
 | [09](09-best-practices.md) | Best Practices | Debugging workflows, framework-specific tips, and a structured learning path |
 | [10](10-gcp-vertex-ai-ecosystem.md) | GCP Vertex AI Ecosystem | Vertex AI Workbench, Colab Enterprise, TensorBoard, model serving, HP tuning, and AI Hypercomputer |
+| [11](11-model-serving-and-inference.md) | Model Serving & Inference | Serving frameworks (TF Serving, Triton, vLLM), quantization, pruning, batching strategies, and API patterns |
+
+### Related Sections
+
+Additional ML topics have been organized into separate folders:
+
+- **[ML Fundamentals](../ml-fundamentals/)** - Optimizers, regularization, transfer learning, data pipelines, feature stores
+- **[LLM & GenAI](../llm-and-genai/)** - Transformer architecture, attention, tokenization, RAG, vector search
+- **[MLOps](../mlops/)** - CI/CD for ML, model monitoring, A/B testing, case study framework
 
 ## Recommended Reading Order
 
@@ -35,7 +44,9 @@ A beginner-friendly guide to understanding, debugging, and optimizing GPU and TP
 1. Focus on Chapters 03, 04, 05, 07 (TPU knowledge, errors, distributed, GCP infra)
 2. Read Chapter 10 for Vertex AI ecosystem and managed ML services
 3. Review Chapter 08 for optimization strategies
-4. Use Chapter 09 as a checklist
+4. Read Chapter 11 for model serving and inference optimization
+5. See [ML Fundamentals](../ml-fundamentals/), [LLM & GenAI](../llm-and-genai/), and [MLOps](../mlops/) folders for additional topics
+6. Use Chapter 09 as a checklist
 
 ## 11-Week Learning Path
 

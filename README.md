@@ -2,11 +2,14 @@
 
 A collection of resources, summaries, and handbooks for machine learning operations.
 
-## Books
+## Handbooks
 
-In-depth handbooks covering specific MLOps topics:
-
-- **[GPU/TPU Debugging Handbook](gpu-tpu-debugging/)** — A beginner-friendly guide to understanding, debugging, and optimizing GPU and TPU workloads for machine learning. Covers GPU architecture, NVIDIA tools, TPU/XLA, common errors, distributed training, profiling, GCP infrastructure, and memory optimization.
+| Folder | Description |
+|--------|-------------|
+| **[gpu-tpu-debugging/](gpu-tpu-debugging/)** | GPU/TPU architecture, NVIDIA tools, common errors, distributed training, profiling, GCP infrastructure, memory optimization, model serving |
+| **[ml-fundamentals/](ml-fundamentals/)** | ML training approaches, optimizers, regularization, transfer learning, data pipelines, feature stores |
+| **[llm-and-genai/](llm-and-genai/)** | Transformer architecture, attention mechanisms, tokenization, RAG, prompt engineering, vector search |
+| **[mlops/](mlops/)** | CI/CD for ML, model monitoring, A/B testing, containerization, microservices, case study framework |
 
 ## Resources
 
