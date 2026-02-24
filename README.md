@@ -9,7 +9,7 @@ A collection of resources, summaries, and handbooks for machine learning operati
 | **[gpu-tpu-debugging/](gpu-tpu-debugging/)** | GPU/TPU architecture, NVIDIA tools, common errors, distributed training, profiling, GCP infrastructure, memory optimization, model serving |
 | **[ml-fundamentals/](ml-fundamentals/)** | ML training approaches, optimizers, regularization, transfer learning, data pipelines, feature stores |
 | **[llm-and-genai/](llm-and-genai/)** | Transformer architecture, attention mechanisms, tokenization, RAG, prompt engineering, vector search |
-| **[mlops/](mlops/)** | CI/CD for ML, model monitoring, A/B testing, containerization, microservices, case study framework |
+| **[mlops/](mlops/)** | CI/CD for ML, model monitoring, A/B testing, containerization, microservices, case study framework, Vertex AI pipeline walkthrough (Chicago Taxi) |
 
 ## Resources
 
